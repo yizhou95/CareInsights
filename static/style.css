@@ -1,0 +1,55 @@
+html {
+	height: 100%;
+	width: 100%;
+}
+
+/* Input CSS For Login Page*/
+#loginWrapper {
+	background-color: white;
+	width: 60%;
+	padding: 10px;
+	margin-top: 10px; /* Add spacing above each field */
+	margin-bottom: 15px; /* Add spacing above each field */
+	margin-left: auto;
+	margin-right: auto;
+	border: 5px solid #1f2d56;
+	border-radius: 20px;
+	text-align: center;
+	box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+/* 调整输入框的样式和间距 */
+input[type="text"],
+input[type="password"] {
+    width: 80%; /* 调整宽度 */
+    padding: 10px; /* 增加内边距，使输入框更高 */
+    font-size: 16px; /* 增加字体大小 */
+    margin-top: 10px; /* 输入框顶部的间距 */
+    margin-bottom: 15px; /* 输入框底部的间距，使得每个输入框之间有更大距离 */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* 调整 Sign Up 按钮的间距和样式 */
+button[type="submit"] {
+    width: 50%; /* 按钮宽度 */
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 20px; /* 按钮与输入框的间距 */
+    border: none;
+    background-color: #1f2d56; /* 可选: 按钮背景色 */
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* 可选: 调整链接的间距 */
+a {
+    display: block;
+    margin-top: 20px; /* 链接与按钮的间距 */
+    color: #1f2d56; /* 链接颜色 */
+    text-decoration: none;
+    font-size: 14px;
+}
+
