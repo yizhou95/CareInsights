@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+# from flask_migrate import Migrate
 
-app = Flask(__name__, template_folder='html')
+app = Flask(__name__, template_folder='HTML')
 app.config['SECRET_KEY'] = 'Zhouyi_CSCI6180'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:zhouyi1995@localhost/visualization1'
 
@@ -12,12 +13,16 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+# # Set up Flask-Migrate with the app and database
+# migrate = Migrate(app, db)  # Add this line to set up Flask-Migrate
+
 # Define the User model
 class User(db.Model, UserMixin):
     __tablename__ = 'users' # Specifies the table name in visualization1 database
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
+    role = db.Column(db.String(50), nullable=False)
 
 
 @login_manager.user_loader
@@ -30,6 +35,7 @@ def signup():
     if request.method =='POST':
         username = request.form['username']
         password = request.form['password']
+        role = request.form['role']  # Get the selected role
     
         #check if username exists
         if User.query.filter_by(username=username).first():
@@ -38,7 +44,7 @@ def signup():
     
         #Hash password and save new user
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        new_user = User(username = username, password=hashed_password)
+        new_user = User(username = username, password=hashed_password, role=role)
         db.session.add(new_user)
         db.session.commit()
 
@@ -69,6 +75,22 @@ def login():
 @login_required
 def dashboard():
     return f'Hello, {current_user.username}! Welcome to your dashboard.'
+
+
+@app.route('/admin')
+@login_required
+def admin_page():
+    if current_user.role != 'admin':
+        flash('You do not have permission to access this page.', 'danger')
+        return redirect(url_for('dashboard'))  # Redirect to a different page
+    # # Example statistics calculations
+    # total_users = User.query.count()
+    # active_users = User.query.filter_by(active=True).count()  # Assuming there's an 'active' column
+
+    return render_template('admin.html')
+    # return render_template('admin.html', total_users=total_users, active_users=active_users)
+
+    
 
 # Logout route
 @app.route('/logout')
