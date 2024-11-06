@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .welcome-message {
+            font-size: 1.2em;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .user-info, .features {
+            background-color: #ffffff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .features ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .features ul li {
+            margin: 10px 0;
+        }
+        .features ul li a {
+            text-decoration: none;
+            color: #1f2d56;
+            font-weight: bold;
+        }
+        .features ul li a:hover {
+            text-decoration: underline;
+        }
+        .logout-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #d9534f;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+        }
+        .logout-button:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Your Dashboard</h1>
+        
+        <!-- Welcome message -->
+        <p class="welcome-message">Hello, {{ current_user.username }}! Welcome back to your dashboard.</p>
+
+        <!-- User information section -->
+        <div class="user-info">
+            <h2>Your Information</h2>
+            <p><strong>Username:</strong> {{ current_user.username }}</p>
+            <p><strong>Role:</strong> {{ current_user.role }}</p>
+            <p><strong>Email:</strong> {{ current_user.email }}</p>
+        </div>
+
+        <!-- Features available to the user -->
+        <div class="features">
+            <h2>Available Features</h2>
+            <ul>
+                <li><a href="{{ url_for('feature1') }}">Feature 1</a></li>
+                <li><a href="{{ url_for('feature2') }}">Feature 2</a></li>
+                <li><a href="{{ url_for('feature3') }}">Feature 3</a></li>
+            </ul>
+        </div>
+
+        <!-- Logout link -->
+        <a href="{{ url_for('logout') }}" class="logout-button">Log Out</a>
+    </div>
+</body>
+</html>
