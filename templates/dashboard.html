@@ -81,14 +81,14 @@
         <div class="features">
             <h2>Available Features</h2>
             <ul>
-                <li><a href="{{ url_for('feature1') }}">Feature 1</a></li>
-                <li><a href="{{ url_for('feature2') }}">Feature 2</a></li>
-                <li><a href="{{ url_for('feature3') }}">Feature 3</a></li>
+                <li><a href="{{ url_for('auth.feature1') }}">Feature 1</a></li>
+                <li><a href="{{ url_for('auth.feature2') }}">Feature 2</a></li>
+                <li><a href="{{ url_for('auth.feature3') }}">Feature 3</a></li>
             </ul>
         </div>
 
         <!-- Logout link -->
-        <a href="{{ url_for('logout') }}" class="logout-button">Log Out</a>
+        <a href="{{ url_for('auth.logout') }}" class="logout-button">Log Out</a>
     </div>
 </body>
 </html>
