@@ -5,6 +5,7 @@ CareInsights/
 │   ├── __init__.py        # Blueprint registration
 │   ├── auth_controller.py # Authentication routes
 │   └── admin_controller.py# Admin-specific routes
+|   └── fhir_controller.py # FHIR-Table routes
 ├── services/              # Logic Tier (business logic services)
 │   ├── __init__.py
 │   └── user_service.py    # User-related logic, such as creating users
