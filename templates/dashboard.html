@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
-<<<<<<< HEAD
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='patientstyle.css') }}">
 </head>
+
 <body>
     <!-- <div class="container">
         <h1>Dashboard</h1>
@@ -25,7 +26,8 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#" onclick="showDashboard()">Dashboard</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -45,11 +47,11 @@
             </ul>
         </div>
     </nav>
-    
-        
-        <!-- Page Content -->
+
+
+    <!-- Page Content -->
     <div class="container mt-4">
-        
+
         <!-- Placeholder for Dashboard Section -->
         <div id="dashboardSection" style="display: block;">
             <h2>Welcome to the Dashboard</h2>
@@ -85,272 +87,188 @@
                 <button onclick="submitTask()">Submit</button>
             </div>
             <p><strong>Directions</strong></p>
-            <p>In the textbox, enter the id of the patient that you want a report on. Once you are done and hit "Submit", a pdf report will be generated. The report will contain information such as demographics, allergies, conditions, careplans, observations, etc.</p>
-            <p><strong>Note: It may take a minute for the report to be generated. A popup will serve as confirmation.</strong></p>
+            <p>In the textbox, enter the id of the patient that you want a report on. Once you are done and hit
+                "Submit", a pdf report will be generated. The report will contain information such as demographics,
+                allergies, conditions, careplans, observations, etc.</p>
+            <p><strong>Note: It may take a minute for the report to be generated. A popup will serve as
+                    confirmation.</strong></p>
         </div>
     </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-
-
-    function showDashboard() {
-        const dashboardSection = document.getElementById("dashboardSection");
-        const fhirTableSection = document.getElementById("fhirTableSection");
-        const PatientSection = document.getElementById("PatientReport");
-
-        if (dashboardSection) dashboardSection.style.display = "block";
-        if (fhirTableSection) fhirTableSection.style.display = "none";
-        if (PatientSection) PatientSection.style.display = "none";
-
-        // Optionally call a function to render charts in the dashboard
-        renderDashboardCharts();
-    }
-    
-    // Function to show the FHIR Data Table section
-    function showFHIRTable() {
-        const dashboardSection = document.getElementById("dashboardSection");
-        const tableSection = document.getElementById("fhirTableSection");
-        const PatientSection = document.getElementById("PatientReport");
-        if (PatientSection) PatientSection.style.display = "none";
-        if (dashboardSection) dashboardSection.style.display = "none";
-        if (fhirTableSection) fhirTableSection.style.display = "block";
-    }
+    <script>
 
 
-    // Function to fetch and display data based on the selected table
-    function loadTableData() {
-        const tableName = document.getElementById("tableSelect").value;
+        function showDashboard() {
+            const dashboardSection = document.getElementById("dashboardSection");
+            const fhirTableSection = document.getElementById("fhirTableSection");
+            const PatientSection = document.getElementById("PatientReport");
 
-        if(!tableName){
-            console.warn("No table selected.") // Log when no table is selected
-            document.getElementById("fhirTableSelection").style.display = "None"; // Hide the table section
-            return;
-        }
-        console.log("Selected Table:", tableName); 
+            if (dashboardSection) dashboardSection.style.display = "block";
+            if (fhirTableSection) fhirTableSection.style.display = "none";
+            if (PatientSection) PatientSection.style.display = "none";
 
-        
-        $.get(`/api/fhir/${tableName}`, function(data) {
-            console.log("Fetched Data:", data); 
-            populateTable(data);
-            showFHIRTable();
-        }).fail(function(jqXHR, textStatus, errorThrown){
-            console.error("Error fetching data:", textStatus, errorThrown);
-        });
-    }
-
-    // Function to populate the table with data
-    function populateTable(data) {
-        console.log("Populating Table with Data:", data); 
-        
-        // Clear existing DataTable
-        const dataTable = $('#dataTable');
-        if ($.fn.DataTable.isDataTable(dataTable)) {
-            dataTable.DataTable().clear().destroy();
+            // Optionally call a function to render charts in the dashboard
+            renderDashboardCharts();
         }
 
-        if (!data || data.length === 0) {
-            console.warn("No data to display.");
-            $('#tableHeaders').html('<th>No Data</th>');
-            $('#tableBody').html('<tr><td>No Data Available</td></tr>');
-            return;
+        // Function to show the FHIR Data Table section
+        function showFHIRTable() {
+            const dashboardSection = document.getElementById("dashboardSection");
+            const tableSection = document.getElementById("fhirTableSection");
+            const PatientSection = document.getElementById("PatientReport");
+            if (PatientSection) PatientSection.style.display = "none";
+            if (dashboardSection) dashboardSection.style.display = "none";
+            if (fhirTableSection) fhirTableSection.style.display = "block";
         }
 
-        // Generate headers dynamically based on the data keys
-        const headers = Object.keys(data[0]);
-        console.log("Generated Headers:", headers);
-        $('#tableHeaders').html(headers.map(header => `<th>${header}</th>`).join(""));
-        
-        // Generate rows dynamically
-        const rows = data.map(row => 
-            `<tr>${headers.map(header => `<td>${row[header] || ''}</td>`).join("")}</tr>`
-        );
-        console.log("Rows:", rows);
-        $('#tableBody').html(rows.join(""));
-        
 
-        // Initialize DataTable with sorting
-        $('#dataTable').DataTable({
-            "order": []  // Allow user sorting
-        });
-        console.log("DataTable initialized.");
+        // Function to fetch and display data based on the selected table
+        function loadTableData() {
+            const tableName = document.getElementById("tableSelect").value;
 
-    }
+            if (!tableName) {
+                console.warn("No table selected.") // Log when no table is selected
+                document.getElementById("fhirTableSelection").style.display = "None"; // Hide the table section
+                return;
+            }
+            console.log("Selected Table:", tableName);
 
-    // Function to render charts in the dashboard
-    function renderDashboardCharts() {
-        const dashboardSection = document.getElementById("dashboardSection");
-        if (!dashboardSection) {
-            console.error("Dashboard section not found.");
-            return;
+
+            $.get(`/api/fhir/${tableName}`, function (data) {
+                console.log("Fetched Data:", data);
+                populateTable(data);
+                showFHIRTable();
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching data:", textStatus, errorThrown);
+            });
         }
 
-        // Clear the current content and add a chart
-        dashboardSection.innerHTML = `<canvas id="myChart" width="400" height="200"></canvas>`;
+        // Function to populate the table with data
+        function populateTable(data) {
+            console.log("Populating Table with Data:", data);
 
-        const ctx = document.getElementById("myChart").getContext("2d");
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+            // Clear existing DataTable
+            const dataTable = $('#dataTable');
+            if ($.fn.DataTable.isDataTable(dataTable)) {
+                dataTable.DataTable().clear().destroy();
+            }
+
+            if (!data || data.length === 0) {
+                console.warn("No data to display.");
+                $('#tableHeaders').html('<th>No Data</th>');
+                $('#tableBody').html('<tr><td>No Data Available</td></tr>');
+                return;
+            }
+
+            // Generate headers dynamically based on the data keys
+            const headers = Object.keys(data[0]);
+            console.log("Generated Headers:", headers);
+            $('#tableHeaders').html(headers.map(header => `<th>${header}</th>`).join(""));
+
+            // Generate rows dynamically
+            const rows = data.map(row =>
+                `<tr>${headers.map(header => `<td>${row[header] || ''}</td>`).join("")}</tr>`
+            );
+            console.log("Rows:", rows);
+            $('#tableBody').html(rows.join(""));
+
+
+            // Initialize DataTable with sorting
+            $('#dataTable').DataTable({
+                "order": []  // Allow user sorting
+            });
+            console.log("DataTable initialized.");
+
+        }
+
+        // Function to render charts in the dashboard
+        function renderDashboardCharts() {
+            const dashboardSection = document.getElementById("dashboardSection");
+            if (!dashboardSection) {
+                console.error("Dashboard section not found.");
+                return;
+            }
+
+            // Clear the current content and add a chart
+            dashboardSection.innerHTML = `<canvas id="myChart" width="400" height="200"></canvas>`;
+
+            const ctx = document.getElementById("myChart").getContext("2d");
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: [12, 19, 3, 5, 2, 3],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
-    }
+            });
+        }
 
-    function showPatientReport(){
-        const patientSection = document.getElementById("PatientReport");
-        const dashboardSection = document.getElementById("dashboardSection");
-        const tableSection = document.getElementById("fhirTableSection");
+        function showPatientReport() {
+            const patientSection = document.getElementById("PatientReport");
+            const dashboardSection = document.getElementById("dashboardSection");
+            const tableSection = document.getElementById("fhirTableSection");
 
-        if (patientSection) patientSection.style.display = "block";
-        if (dashboardSection) dashboardSection.style.display = "none";
-        if (fhirTableSection) fhirTableSection.style.display = "none";
-    }
+            if (patientSection) patientSection.style.display = "block";
+            if (dashboardSection) dashboardSection.style.display = "none";
+            if (fhirTableSection) fhirTableSection.style.display = "none";
+        }
 
-    // Function to send Patient ID to Logic Tier to be processed.
-    function submitTask() {
-        const userInput = document.getElementById('inputBox').value;
+        // Function to send Patient ID to Logic Tier to be processed.
+        function submitTask() {
+            const userInput = document.getElementById('inputBox').value;
 
-        fetch('/api/pdf/perform_task', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ input: userInput })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Report generated successfully!');
-            } else {
-                alert('Report generation failed: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred.');
-        });
-    }
+            fetch('/api/pdf/perform_task', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ input: userInput })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Report generated successfully!');
+                    } else {
+                        alert('Report generation failed: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred.');
+                });
+        }
 
-</script>
-        
+    </script>
 
-=======
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        .welcome-message {
-            font-size: 1.2em;
-            margin-top: 20px;
-            text-align: center;
-        }
-        .user-info, .features {
-            background-color: #ffffff;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .features ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .features ul li {
-            margin: 10px 0;
-        }
-        .features ul li a {
-            text-decoration: none;
-            color: #1f2d56;
-            font-weight: bold;
-        }
-        .features ul li a:hover {
-            text-decoration: underline;
-        }
-        .logout-button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #d9534f;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-            text-align: center;
-        }
-        .logout-button:hover {
-            background-color: #c9302c;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Welcome to Your Dashboard</h1>
-        
-        <!-- Welcome message -->
-        <p class="welcome-message">Hello, {{ current_user.username }}! Welcome back to your dashboard.</p>
 
-        <!-- User information section -->
-        <div class="user-info">
-            <h2>Your Information</h2>
-            <p><strong>Username:</strong> {{ current_user.username }}</p>
-            <p><strong>Role:</strong> {{ current_user.role }}</p>
-            <p><strong>Email:</strong> {{ current_user.email }}</p>
-        </div>
-
-        <!-- Features available to the user -->
-        <div class="features">
-            <h2>Available Features</h2>
-            <ul>
-                <li><a href="{{ url_for('auth.feature1') }}">Feature 1</a></li>
-                <li><a href="{{ url_for('auth.feature2') }}">Feature 2</a></li>
-                <li><a href="{{ url_for('auth.feature3') }}">Feature 3</a></li>
-            </ul>
-        </div>
-
-        <!-- Logout link -->
-        <a href="{{ url_for('auth.logout') }}" class="logout-button">Log Out</a>
-    </div>
->>>>>>> 11ac83b (SeperateCodeToSatisfy3TierArch)
 </body>
+
 </html>
