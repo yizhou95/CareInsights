@@ -57,20 +57,3 @@ def logout():
 @login_required
 def dashboard():
     return render_template('dashboard.html')
-
-
-
-@auth_bp.route('/feature1')
-@login_required
-def feature1():
-    return "<h1>Feature 1 Page</h1>"
-
-@auth_bp.route('/feature2')
-@login_required
-def feature2():
-    return "<h1>Feature 2 Page</h1>"
-
-@auth_bp.route('/feature3')
-@login_required
-def feature3():
-    return "<h1>Feature 3 Page</h1>"
