@@ -12,10 +12,14 @@ CareInsights/
 ├── models/                # Data Tier (SQLAlchemy models)
 │   ├── __init__.py
 │   └── user.py            # User model with role, password, etc.
+│   └── csv_processor.py   # Extract data from csv file, insert into database
+│   └── json_processor.py  # Extract data from json file, insert into database
 ├── templates/             # Presentation Tier (HTML templates)
 │   ├── login.html
 │   ├── signup.html
 │   ├── admin.html
 │   └── dashboard.html
+│   └── upload_csv.html
+│   └── upload_json.html
 └── static/                # Presentation Tier (CSS and JS files)
     └── style.css          # Custom styling for the app
