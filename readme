@@ -1,0 +1,21 @@
+CareInsights/
+├── app.py                 # Main app initialization and blueprint registration
+├── config.py              # Configurations (e.g., database URI)
+├── controllers/           # Logic Tier (Flask routes and business logic)
+│   ├── __init__.py        # Blueprint registration
+│   ├── auth_controller.py # Authentication routes
+│   └── admin_controller.py# Admin-specific routes
+|   └── fhir_controller.py # FHIR-Table routes
+├── services/              # Logic Tier (business logic services)
+│   ├── __init__.py
+│   └── user_service.py    # User-related logic, such as creating users
+├── models/                # Data Tier (SQLAlchemy models)
+│   ├── __init__.py
+│   └── user.py            # User model with role, password, etc.
+├── templates/             # Presentation Tier (HTML templates)
+│   ├── login.html
+│   ├── signup.html
+│   ├── admin.html
+│   └── dashboard.html
+└── static/                # Presentation Tier (CSS and JS files)
+    └── style.css          # Custom styling for the app
