@@ -1,0 +1,115 @@
+/* General Reset */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+/* Wrapper Styling */
+#adminWrapper {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 3px solid #1f2d56;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Heading */
+#adminWrapper h1 {
+    color: #1f2d56;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Link Styling */
+#adminWrapper a {
+    color: #1f2d56;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+#adminWrapper a:hover {
+    text-decoration: underline;
+}
+
+/* Form Styling */
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.form-group {
+    width: 100%;
+    text-align: left;
+}
+
+label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+input.file-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input.file-input:focus {
+    border-color: #1f2d56;
+    outline: none;
+    box-shadow: 0 0 5px rgba(31, 45, 86, 0.5);
+}
+
+button[type="submit"] {
+    background-color: #1f2d56;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #162346;
+}
+
+/* Flash Messages */
+.flash-messages ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.flash-messages li {
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.flash-messages .error {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    border: 1px solid #cc0000;
+}
+
+.flash-messages .success {
+    background-color: #e6ffe6;
+    color: #008000;
+    border: 1px solid #008000;
+}

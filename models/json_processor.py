@@ -12,37 +12,10 @@ def connect_to_db():
         charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor
     )
-# def connect_to_db():
-#     try:
-#         connection = pymysql.connect(
-#             host='localhost',
-#             database='visualization',
-#             user='root',
-#             password='123456'
-#         )
-#
-#         if connection.open:
-#             print("successfully connected to MySql")
-#             return connection
-#     except pymysql.MySQLError as e:
-#         print(f"Error while connecting to MySql instance:{e}")
-#         return None
-#
-
-# def load_json_file(file_path):
-#     conn = connect_to_db1()  # Assuming this is your method to connect to MySQL
-#     try:
-#         with conn.cursor() as cursor:
-#
-#              with open(file_path, 'r', encoding='utf-8') as f:
-#                    fhir_data = json.load(f)
-#     except Exception as e:
-#         print(f"Error when loading json data: {e}")
-#     finally:
-#         conn.close()
-#         return fhir_data
-
-
+#Extracts and processes patient information from a FHIR resource
+# and inserts it into the Patients table in the database.
+#Parameters:  resource (dict): A dictionary containing the FHIR Patient resource.
+#             cursor (MySQL Cursor): The database cursor to execute SQL statements.
 def insert_patient(resource, cursor):
     # Initialize all fields to None
     patient_birthDate = None
@@ -195,6 +168,10 @@ def insert_patient(resource, cursor):
         patient_Country, patient_Zip, patient_LAT, patient_LON, patient_Healthcare_expenses, patient_healthcare_coverage
     ))
 
+#Extracts and processes encounter information from a FHIR resource
+# and inserts it into the encounter table in the database.
+#Parameters:  resource (dict): A dictionary containing the FHIR patient resource.
+#             cursor (MySQL Cursor): The database cursor to execute SQL statements.
 def insert_encounter(resource, cursor):
     try:
         # Get the Encounter ID
@@ -296,6 +273,10 @@ def insert_encounter(resource, cursor):
         print(f"Error inserting or updating encounter data: {e}")
         # print("Data:", resource)
 
+#Extracts and processes condition information from a FHIR resource
+# and inserts it into the condition table in the database.
+#Parameters:  resource (dict): A dictionary containing the FHIR condition resource.
+#             cursor (MySQL Cursor): The database cursor to execute SQL statements.
 def insert_condition(resource, cursor):
     try:
         # Get the Condition ID (can be used for Encounter reference)
@@ -366,6 +347,10 @@ def insert_condition(resource, cursor):
         print(f"Error inserting or updating condition data: {e}")
         # print("Data:", resource)
 
+#Extracts and processes claim information from a FHIR resource
+# and inserts it into the claim table in the database.
+#Parameters:  resource (dict): A dictionary containing the FHIR claim resource.
+#             cursor (MySQL Cursor): The database cursor to execute SQL statements.
 def insert_claim(resource, cursor):
     try:
         # Get the Claim ID
@@ -439,27 +424,32 @@ def insert_claim(resource, cursor):
     except Exception as e:
         print(f"Error inserting or updating claim data: {e}")
         # print("Data:", resource)
-
+# Processes FHIR data and inserts it into the appropriate database tables based on the resource type.
+# Parameters: fhir_data (dict): A dictionary representing the FHIR-compliant JSON data to process.
+#             Expected to have an "entry" field containing a list of resources.
 def process_fhir_resource(fhir_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
+        # Iterate through all entries in the FHIR data.
         with conn.cursor() as cursor:
+            # Extract the resource object from the entry.
             for entry in fhir_data.get("entry", []):
                 resource = entry.get("resource", {})
+                # Identify the resource type (e.g., Patient, Encounter).
                 resource_type = resource.get("resourceType")
+                # Call the corresponding method to handle the resource based on its type.
                 if resource_type == "Patient":
-                   insert_patient(resource,cursor)
-                   #print("processing resource---Patient")
+                   insert_patient(resource,cursor)  # Insert Patient data.
                 elif resource_type == "Encounter":
-                    insert_encounter(resource, cursor)
-                   # print("processing resource---Encounter")
+                    insert_encounter(resource, cursor)  # Insert Encounter data.
                 elif resource_type == "Condition":
-                    insert_condition(resource, cursor)
+                    insert_condition(resource, cursor)  # Insert Condition data.
                 elif resource_type == "Claim":
-                    insert_claim(resource, cursor)
+                    insert_claim(resource, cursor)  # Insert Claim data.
     except Exception as e:
         print(f"Error inserting into database from json: {e}")
     finally:
+        # Commit the changes to the database and ensure the connection is closed.
         conn.commit()
         conn.close()
 

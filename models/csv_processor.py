@@ -14,7 +14,7 @@ def connect_to_db():
 #Parameters:   file_name (str): The name of the CSV file.
 # csv_data (DataFrame): The data from the CSV file to be inserted into the database.
 def process_csv_file(file_name,csv_data):
-    print("hello")
+    # A dictionary mapping file names to their corresponding database insertion methods.
     table_methods={
         "patients.csv": insert_into_patients_table,
         "providers.csv": insert_into_providers_table,
@@ -33,13 +33,18 @@ def process_csv_file(file_name,csv_data):
         "careplans.csv": insert_into_careplans_table,
         "allergies.csv": insert_into_allergies_table,
     }
+    # Check if the file name is in the dictionary.
     if file_name in table_methods:
+        # Call the corresponding insertion method with the provided data.
         table_methods[file_name](csv_data)
     else:
+        # Print a message if no method is defined for the file.
         print(f"No method defined for {file_name}.Skipping.")
 
+# Inserts patient data from a CSV string into the `patients` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_patients_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -90,8 +95,10 @@ def insert_into_patients_table(csv_data):
     finally:
         conn.close()
 
+# Inserts providers data from a CSV string into the `providers` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_providers_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -127,8 +134,10 @@ def insert_into_providers_table(csv_data):
     finally:
         conn.close()
 
+# Inserts organizations data from a CSV string into the `organizations` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_organizations_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             # Parse CSV content
@@ -165,8 +174,10 @@ def insert_into_organizations_table(csv_data):
     finally:
         conn.close()
 
+# Inserts payers data from a CSV string into the `payers` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_payers_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -223,8 +234,10 @@ def insert_into_payers_table(csv_data):
     finally:
         conn.close()
 
+# Inserts payer_transitions data from a CSV string into the `payer_transitions` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_payer_transitions_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -256,8 +269,10 @@ def insert_into_payer_transitions_table(csv_data):
     finally:
         conn.close()
 
+# Inserts encounters data from a CSV string into the `encounters` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_encounters_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -298,8 +313,10 @@ def insert_into_encounters_table(csv_data):
     finally:
         conn.close()
 
+# Inserts supplies data from a CSV string into the `supplies` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_supplies_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -329,8 +346,10 @@ def insert_into_supplies_table(csv_data):
     finally:
         conn.close()
 
+# Inserts procedures data from a CSV string into the `procedures` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_procedures_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -362,8 +381,10 @@ def insert_into_procedures_table(csv_data):
     finally:
         conn.close()
 
+# Inserts observations data from a CSV string into the `observations` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_observations_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -396,8 +417,10 @@ def insert_into_observations_table(csv_data):
     finally:
         conn.close()
 
+# Inserts medications data from a CSV string into the `medications` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_medications_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -437,8 +460,10 @@ def insert_into_medications_table(csv_data):
     finally:
         conn.close()
 
+# Inserts immunizations data from a CSV string into the `immunizations` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_immunizations_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -470,8 +495,10 @@ def insert_into_immunizations_table(csv_data):
     finally:
         conn.close()
 
+# Inserts conditions data from a CSV string into the `conditions` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_conditions_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -503,9 +530,10 @@ def insert_into_conditions_table(csv_data):
     finally:
         conn.close()
 
-
+# Inserts claims transactions data from a CSV string into the `claims-transactions` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_claims_transactions_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -542,15 +570,17 @@ def insert_into_claims_transactions_table(csv_data):
         conn.close()  # Close the database connection
 
 
+# Inserts claims data from a CSV string into the `claims` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_claims_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
             for row in reader:
-                if len(row) == 24:  # Ensure the correct number of columns (24 based on your schema)
+                if len(row) == 24:
                     query = """
                         INSERT INTO claims (
                             Id, PATIENTID, PROVIDERID, PRIMARYPATIENTINSURANCEID, SECONDARYPATIENTINSURANCEID, 
@@ -586,8 +616,10 @@ def insert_into_claims_table(csv_data):
     finally:
         conn.close()  # Close the database connection
 
+# Inserts care plans data from a CSV string into the `careplans` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_careplans_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
@@ -616,16 +648,17 @@ def insert_into_careplans_table(csv_data):
     finally:
         conn.close()  # Close the database connection
 
-
+# Inserts allergies data from a CSV string into the `allergies` table in the database.
+# If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_allergies_table(csv_data):
-    conn = connect_to_db()  # Assuming this is your method to connect to MySQL
+    conn = connect_to_db()
     try:
         with conn.cursor() as cursor:
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
             for row in reader:
-                if len(row) == 13:  # Ensure the correct number of columns (13 based on your schema)
+                if len(row) == 13:
                     query = """
                         INSERT INTO allergies (
                             START, STOP, PATIENT, ENCOUNTER, CODE, SYSTEM1, DESCRIPTION, TYPE, CATEGORY, 
@@ -650,16 +683,16 @@ def insert_into_allergies_table(csv_data):
     finally:
         conn.close()  # Close the database connection
 
-def check_claim_exists(cursor, claim_id):
-    cursor.execute("SELECT COUNT(1) FROM claims WHERE Id = %s", (claim_id,))
-    return cursor.fetchone()[0] > 0
-
-
-def check_patient_exists(cursor, patient_id):
-    cursor.execute("SELECT COUNT(1) FROM patients WHERE Id = %s", (patient_id,))
-    return cursor.fetchone()[0] > 0
-
-
-def check_provider_exists(cursor, provider_id):
-    cursor.execute("SELECT COUNT(1) FROM providers WHERE Id = %s", (provider_id,))
-    return cursor.fetchone()[0] > 0
+# def check_claim_exists(cursor, claim_id):
+#     cursor.execute("SELECT COUNT(1) FROM claims WHERE Id = %s", (claim_id,))
+#     return cursor.fetchone()[0] > 0
+#
+#
+# def check_patient_exists(cursor, patient_id):
+#     cursor.execute("SELECT COUNT(1) FROM patients WHERE Id = %s", (patient_id,))
+#     return cursor.fetchone()[0] > 0
+#
+#
+# def check_provider_exists(cursor, provider_id):
+#     cursor.execute("SELECT COUNT(1) FROM providers WHERE Id = %s", (provider_id,))
+#     return cursor.fetchone()[0] > 0
