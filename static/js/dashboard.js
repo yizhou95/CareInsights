@@ -452,7 +452,7 @@ function updateUI({
           </h5>
         </div>
       </div>
-      <div class="mt-8 flex w-full items-center justify-center">
+      <div class="mt-8 flex w-full items-center justify-center overflow-x-auto">
         <div
           id="chart-nine"
           class="ml-5 flex w-full items-center justify-center"
@@ -1108,11 +1108,12 @@ function renderConditionTreeMapChart(containerId, data) {
         .slice(0, 10);
 
     // Dimensions
-    const width = 1500; // Full width of the container
-    const height = 600; // Fixed height
+    const containerWidth = container.clientWidth || 1500; // Use container width if available
+    const width = Math.max(1500, containerWidth); // Ensure minimum width for horizontal scroll
+    const height = 600;
 
     // Treemap setup
-    const treemap = d3.treemap().size([width, height]).padding(2).round(true);
+    const treemap = d3.treemap().size([width, height]).padding(1).round(true);
 
     const root = d3
         .hierarchy({ children: top10Conditions })
@@ -1120,7 +1121,11 @@ function renderConditionTreeMapChart(containerId, data) {
     treemap(root);
 
     const colorScale = d3
-        .scaleSequential(d3.interpolateBlues)
+        .scaleOrdinal([
+            "#003f5c", "#2f4b7c", "#665191", "#a05195",
+            "#d45087", "#f95d6a", "#ff7c43", "#ffa600",
+            "#1b9e77", "#33a02c"
+        ])
         .domain([0, d3.max(top10Conditions.map(d => d.count))]);
 
     // Create the SVG
@@ -1129,9 +1134,7 @@ function renderConditionTreeMapChart(containerId, data) {
         .append("svg")
         .attr("width", width)
         .attr("height", height)
-        .style("font-family", "Arial, sans-serif")
-        .style("overflow-x", "auto") // Allows horizontal scroll
-        .style("overflow-y", "hidden");
+        .style("font-family", "Arial, sans-serif");
 
     // Add cells
     const cell = svg
@@ -1173,7 +1176,7 @@ function renderConditionTreeMapChart(containerId, data) {
         .style("white-space", "nowrap") // Ensures no line breaks
         .style("overflow", "hidden") // Hidden overflow for long text
         .style("text-overflow", "ellipsis") // Adds ellipsis for long text
-        .text(d => d.data.condition)
+        .text(d => d.data.condition);
 
     // Tooltip setup
     const tooltip = d3
@@ -1208,6 +1211,7 @@ function renderConditionTreeMapChart(containerId, data) {
             tooltip.style("opacity", 0);
         });
 }
+
 
 function renderObservationsLineChart(containerId, data) {
     const container = document.getElementById(containerId);

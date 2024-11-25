@@ -23,15 +23,9 @@ login_manager.login_view = 'auth.login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# app.register_blueprint(auth_bp, url_prefix='/auth')
-# app.register_blueprint(admin_bp, url_prefix='/admin')
-# app.register_blueprint(fhir_bp, url_prefix='/api/fhir')
-
 # Register all blueprints
 for blueprint, prefix in all_blueprints:
     app.register_blueprint(blueprint, url_prefix=prefix)
-# print(app.url_map)
-
 
 @app.route('/')
 def home():
