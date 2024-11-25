@@ -1,0 +1,153 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Outfit:wght@100..900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Outfit", sans-serif;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+/* Input CSS For Login Page*/
+#loginWrapper {
+  background-color: white;
+  width: 60%;
+  padding: 10px;
+  margin-top: 10px; /* Add spacing above each field */
+  margin-bottom: 15px; /* Add spacing above each field */
+  margin-left: auto;
+  margin-right: auto;
+  border: 5px solid #1f2d56;
+  border-radius: 20px;
+  text-align: center;
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 80%;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+/* select { 
+    width: 80%;
+    padding: 10px; 
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+} */
+
+button[type="submit"] {
+  width: 50%;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 20px;
+  border: none;
+  background-color: #1f2d56;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+a {
+  display: block;
+  margin-top: 20px;
+  color: #1f2d56;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+#adminWrapper {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 3px solid #1f2d56;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.admin-options {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.admin-options h2 {
+  color: #1f2d56;
+  font-size: 20px;
+  border-bottom: 2px solid #1f2d56;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.admin-options p {
+  margin: 8px 0;
+}
+
+.system-stats {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #e6e6ff;
+  border-radius: 8px;
+}
+
+.system-stats h2 {
+  color: #1f2d56;
+  font-size: 20px;
+  border-bottom: 2px solid #1f2d56;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.system-stats p {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+a {
+  color: #1f2d56;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.flash-messages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+.flash-messages p {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  width: fit-content;
+  max-width: 80%;
+}
+.flash-messages .error-message {
+  color: red;
+  background-color: #ffe6e6;
+  border: 1px solid red;
+}
+.flash-messages .success-message {
+  color: green;
+  background-color: #e6ffe6;
+  border: 1px solid green;
+}
