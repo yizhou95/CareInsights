@@ -36,7 +36,7 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             flash('Login successful!', 'success')
-            return redirect(url_for('admin.admin_page') if user.role == 'admin' else url_for('auth.temp'))
+            return redirect(url_for('admin.admin_page') if user.role == 'admin' else url_for('auth.dashboard'))
         
         flash('Invalid username or password.', 'danger')
     
@@ -53,11 +53,6 @@ def logout():
 @auth_bp.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
-
-@auth_bp.route('/temp')
-@login_required
-def temp():
     return render_template('main.html')
 
 @auth_bp.route('/patient')
