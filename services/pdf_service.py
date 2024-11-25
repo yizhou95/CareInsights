@@ -44,7 +44,7 @@ class PDF(FPDF):
                 self.multi_cell(column_widths[col_index], 5, str(cell), border=0, align="L")
 
                 # Align with the other cell.
-                self.set_xy(x + col_widths[col_index], y)
+                self.set_xy(x + column_widths[col_index], y)
 
             # Move to the next record
             self.ln(row_height)

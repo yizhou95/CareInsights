@@ -1,14 +1,10 @@
 # controllers/pdf_export_controller.py
-from flask import Blueprint, render_template, flash
-from services import create_user, check_user_exists
+from flask import Blueprint, Response
 from models import db
-from models.user import User
 from flask import jsonify, request
-from sqlalchemy import Table, MetaData, text
-from fpdf import FPDF
+from sqlalchemy import text
 import polars as pl
 from services import PDF
-import pandas as pd
 
 pdf_bp = Blueprint('/pdf', __name__)
 
@@ -206,7 +202,9 @@ def generate_pdf(data, filename='report.pdf'):
         pdf.create_dynamic_table(data)
 
     
-    pdf.output(filename)
+    pdf_output = pdf.output(dest='S').encode('latin1')
+
+    return pdf_output
 
 # Route to handle AJAX call
 @pdf_bp.route('/perform_task', methods=['POST'])
@@ -216,13 +214,17 @@ def perform_task():
         user_input = data.get('input')
         
         results = get_report_data(user_input)
-        generate_pdf(results)
+        pdf = generate_pdf(results)
+        
+        response = Response(pdf, mimetype='application/pdf')
+        response.headers['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        return response
 
-        if data:
-            # Perform your task
-            return jsonify(success=True)
-        else:
-            return jsonify(success=False, error="No matching user found.")
+        # if data:
+        #     # Perform your task
+        #     return jsonify(success=True)
+        # else:
+        #     return jsonify(success=False, error="No matching user found.")
 
     except Exception as e:
         return jsonify(success=False, error=str(e))

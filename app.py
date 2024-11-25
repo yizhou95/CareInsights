@@ -1,6 +1,6 @@
-from flask import Flask, redirect, url_for, jsonify
-from flask_bcrypt import Bcrypt
+from flask import Flask, redirect, url_for
 from flask_login import LoginManager
+from flask_cors import CORS 
 from config import Config
 from controllers import all_blueprints
 from extensions import bcrypt
@@ -9,6 +9,8 @@ from models import db, init_app
 
 app = Flask(__name__, template_folder='templates')
 app.config.from_object(Config)
+
+CORS(app)
 
 # Initialize extensions
 init_app(app)
@@ -59,4 +61,4 @@ def create_admin():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create tables if they don't exist
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=True)

@@ -4,7 +4,6 @@ from flask_login import login_user, logout_user, login_required, current_user
 
 from services import create_user, check_user_exists
 from models.user import User
-from models import db
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -37,7 +36,7 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             flash('Login successful!', 'success')
-            return redirect(url_for('admin.admin_page') if user.role == 'admin' else url_for('auth.dashboard'))
+            return redirect(url_for('admin.admin_page') if user.role == 'admin' else url_for('auth.temp'))
         
         flash('Invalid username or password.', 'danger')
     
@@ -51,12 +50,25 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('auth.login'))
 
-
-
 @auth_bp.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+
+@auth_bp.route('/temp')
+@login_required
+def temp():
+    return render_template('main.html')
+
+@auth_bp.route('/patient')
+@login_required
+def patient_table():
+    return render_template('patient.html')
+
+@auth_bp.route('/data_table')
+@login_required
+def data_table():
+    return render_template('datatable.html')
 
 @auth_bp.route('/patientreport')
 @login_required

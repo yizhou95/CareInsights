@@ -1,9 +1,6 @@
 # controllers/admin_controller.py
-from flask import Blueprint, render_template, flash, redirect, url_for,request
+from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
-from services import create_user, check_user_exists
-from models import db
-from models.user import User
 from models.json_processor  import process_fhir_resource
 from models.csv_processor import process_csv_file
 import json
