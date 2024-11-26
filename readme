@@ -1,25 +1,62 @@
 CareInsights/
 ├── app.py                 # Main app initialization and blueprint registration
 ├── config.py              # Configurations (e.g., database URI)
+├── extensions.py          # Extensions like SQLAlchemy, Marshmallow, etc.
 ├── controllers/           # Logic Tier (Flask routes and business logic)
 │   ├── __init__.py        # Blueprint registration
+│   ├── admin_controller.py# Admin-specific routes
+│   ├── allergies.py       # Allergies-related routes
 │   ├── auth_controller.py # Authentication routes
-│   └── admin_controller.py# Admin-specific routes
-|   └── fhir_controller.py # FHIR-Table routes
-├── services/              # Logic Tier (business logic services)
-│   ├── __init__.py
+│   ├── careplan.py        # CarePlan-specific routes
+│   ├── claim.py           # Claims-related routes
+│   ├── condition.py       # Condition-specific routes
+│   ├── encounter.py       # Encounter-related routes
+│   ├── fhir_controller.py # FHIR-Table routes
+│   ├── immunizations.py   # Immunization-related routes
+│   ├── medication.py      # Medication-related routes
+│   ├── observation.py     # Observation-related routes
+│   ├── organization.py    # Organization-related routes
+│   ├── patient.py         # Patient-specific routes
+│   ├── pdf_export_controller.py # PDF Export logic
+│   ├── procedures.py      # Procedures-related routes
+│   ├── providers.py       # Providers-related routes
+│   ├── supplies.py        # Supplies-related routes
+├── services/              # Business logic services (separating logic from controllers)
+│   ├── __init__.py        # Initialize the services module
+│   ├── pdf_service.py     # Logic for PDF generation and handling
 │   └── user_service.py    # User-related logic, such as creating users
 ├── models/                # Data Tier (SQLAlchemy models)
-│   ├── __init__.py
-│   └── user.py            # User model with role, password, etc.
-│   └── csv_processor.py   # Extract data from csv file, insert into database
-│   └── json_processor.py  # Extract data from json file, insert into database
+│   ├── __init__.py        # SQLAlchemy base initialization
+│   ├── allergies.py       # Allergies model
+│   ├── careplan.py        # CarePlan model
+│   ├── claim.py           # Claims model
+│   ├── condition.py       # Conditions model
+│   ├── csv_processor.py   # Extract data from csv file, insert into database
+│   ├── encounter.py       # Encounter model
+│   ├── immunization.py    # Immunizations model
+│   ├── json_processor.py  # Extract data from json file, insert into database
+│   ├── medication.py      # Medications model
+│   ├── observations.py    # Observations model
+│   ├── organization.py    # Organization model
+│   ├── patient.py         # Patient model
+│   ├── procedure.py       # Procedures model
+│   ├── provider.py        # Providers model
+│   ├── supplies.py        # Supplies model
+│   └── user.py            # User model with roles, password, etc.
 ├── templates/             # Presentation Tier (HTML templates)
-│   ├── login.html
-│   ├── signup.html
-│   ├── admin.html
-│   └── dashboard.html
-│   └── upload_csv.html
-│   └── upload_json.html
-└── static/                # Presentation Tier (CSS and JS files)
-    └── style.css          # Custom styling for the app
+│   ├── admin.html         # Admin dashboard page
+│   ├── datatable.html     # Data table view
+│   ├── login.html         # Login page
+│   ├── main.html          # Main page for the app
+│   ├── patient.html       # Patient details page
+│   ├── patientpdf.html    # PDF export view for patient details
+│   ├── signup.html        # Signup page
+│   ├── upload_csv.html    # CSV upload form
+│   └── upload_json.html   # JSON upload form
+├── static/                # Presentation Tier (CSS, JS, and static assets)
+│   └── style.css          # Custom styling for the app
+├── venv/                  # Virtual environment for Python dependencies
+├── README.md              # Project documentation
+├── requirements.txt       # Python dependencies for the project
+├── test_connect.py        # Script to test database connection
+└── readme                 # Legacy readme file (consider removing or consolidating)
