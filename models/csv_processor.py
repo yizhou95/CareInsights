@@ -1,15 +1,7 @@
 import csv
 import pymysql
+from models import db
 
-def connect_to_db():
-    return pymysql.connect(
-        host="localhost",
-        user="root",
-        password="123456",
-        database="visualization",
-        charset="utf8mb4",
-        cursorclass=pymysql.cursors.DictCursor
-    )
 #Processes a CSV file by determining the appropriate table-specific insertion method.
 #Parameters:   file_name (str): The name of the CSV file.
 # csv_data (DataFrame): The data from the CSV file to be inserted into the database.
@@ -44,9 +36,8 @@ def process_csv_file(file_name,csv_data):
 # Inserts patient data from a CSV string into the `patients` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_patients_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -85,22 +76,21 @@ def insert_into_patients_table(csv_data):
                             healthcare_expenses = VALUES(healthcare_expenses),
                             healthcare_coverage = VALUES(healthcare_coverage)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-            conn.commit()
         print("Data successfully inserted into patients table.")
     except Exception as e:
+        db.session.rollback()  # Rollback the transaction on error
         print(f"Error inserting into patients table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts providers data from a CSV string into the `providers` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_providers_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -124,22 +114,21 @@ def insert_into_providers_table(csv_data):
                             lon = VALUES(lon),
                             utilization = VALUES(utilization)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-            conn.commit()
         print("Data successfully inserted into providers table.")
     except Exception as e:
+        db.session.rollback()  # Rollback the transaction on error
         print(f"Error inserting into providers table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts organizations data from a CSV string into the `organizations` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_organizations_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             # Parse CSV content
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
@@ -167,19 +156,19 @@ def insert_into_organizations_table(csv_data):
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
 
-            conn.commit()  # Commit the transaction
+            db.session.execute(query, row)
         print("Data successfully inserted into organizations table.")
     except Exception as e:
+        db.session.rollback()
         print(f"Error inserting into organizations table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts payers data from a CSV string into the `payers` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_payers_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -224,22 +213,21 @@ def insert_into_payers_table(csv_data):
                             qols_avg = VALUES(qols_avg),
                             member_months = VALUES(member_months)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-            conn.commit()
         print("Data successfully inserted into payers table.")
     except Exception as e:
+        db.session.rollback()
         print(f"Error inserting into payers table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts payer_transitions data from a CSV string into the `payer_transitions` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_payer_transitions_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -259,22 +247,21 @@ def insert_into_payer_transitions_table(csv_data):
                             ownership = VALUES(ownership),
                             ownername = VALUES(ownername)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-            conn.commit()
         print("Data successfully inserted into payer_transactions table.")
     except Exception as e:
+        db.session.rollback()
         print(f"Error inserting into payer_transactions table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts encounters data from a CSV string into the `encounters` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_encounters_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -303,22 +290,22 @@ def insert_into_encounters_table(csv_data):
                             reasoncode = VALUES(reasoncode),
                             reasondescription = VALUES(reasondescription)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-            conn.commit()
+
         print("Data successfully inserted into encounters table.")
     except Exception as e:
+        db.session.rollback()
         print(f"Error inserting into encounters table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts supplies data from a CSV string into the `supplies` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_supplies_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -336,22 +323,21 @@ def insert_into_supplies_table(csv_data):
                             description = VALUES(description),
                             quantity = VALUES(quantity)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-            conn.commit()
         print("Data successfully inserted into supplies table.")
     except Exception as e:
+        db.session.rollback()
         print(f"Error inserting into supplies table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts procedures data from a CSV string into the `procedures` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_procedures_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -371,22 +357,21 @@ def insert_into_procedures_table(csv_data):
                             reasoncode = VALUES(reasoncode),
                             reasondescription = VALUES(reasondescription)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-            conn.commit()
         print("Data successfully inserted into procedures table.")
     except Exception as e:
+        db.session.rollback()
         print(f"Error inserting into procedures table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts observations data from a CSV string into the `observations` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_observations_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -407,22 +392,21 @@ def insert_into_observations_table(csv_data):
                             units = VALUES(units),
                             type = VALUES(type)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-            conn.commit()
-        print("Data successfully inserted into observations table.")
+        print("Data successfully inserted into procedures table.")
     except Exception as e:
-        print(f"Error inserting into observations table: {e}")
+        db.session.rollback()
+        print(f"Error inserting into procedures table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts medications data from a CSV string into the `medications` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_medications_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -450,22 +434,21 @@ def insert_into_medications_table(csv_data):
                             reasoncode = VALUES(reasoncode),
                             reasondescription = VALUES(reasondescription)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-            conn.commit()
-        print("Data successfully inserted into medications table.")
+        print("Data successfully inserted into procedures table.")
     except Exception as e:
-        print(f"Error inserting into medications table: {e}")
+        db.session.rollback()
+        print(f"Error inserting into procedures table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts immunizations data from a CSV string into the `immunizations` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_immunizations_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -485,22 +468,21 @@ def insert_into_immunizations_table(csv_data):
                             description = VALUES(description),
                             base_cost = VALUES(base_cost)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-            conn.commit()
-        print("Data successfully inserted into immunizations table.")
+        print("Data successfully inserted into procedures table.")
     except Exception as e:
-        print(f"Error inserting into immunizations table: {e}")
+        db.session.rollback()
+        print(f"Error inserting into procedures table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts conditions data from a CSV string into the `conditions` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_conditions_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -520,22 +502,21 @@ def insert_into_conditions_table(csv_data):
                             code = VALUES(code),
                             description = VALUES(description)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-            conn.commit()
-        print("Data successfully inserted into conditions table.")
+        print("Data successfully inserted into procedures table.")
     except Exception as e:
-        print(f"Error inserting into conditions table: {e}")
+        db.session.rollback()
+        print(f"Error inserting into procedures table: {e}")
     finally:
-        conn.close()
+        db.session.close()
 
 # Inserts claims transactions data from a CSV string into the `claims-transactions` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_claims_transactions_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -558,24 +539,22 @@ def insert_into_claims_transactions_table(csv_data):
                             LINENOTE = VALUES(LINENOTE), PATIENTINSURANCEID = VALUES(PATIENTINSURANCEID), PROVIDERID = VALUES(PROVIDERID), 
                             SUPERVISINGPROVIDERID = VALUES(SUPERVISINGPROVIDERID)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-
-            conn.commit()  # Commit the changes to the database
-        print("Data successfully inserted into claims_transactions table.")
+        print("Data successfully inserted into procedures table.")
     except Exception as e:
-        print(f"Error inserting into claims_transactions table: {e}")
+        db.session.rollback()
+        print(f"Error inserting into procedures table: {e}")
     finally:
-        conn.close()  # Close the database connection
+        db.session.close()
 
 
 # Inserts claims data from a CSV string into the `claims` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_claims_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -605,23 +584,21 @@ def insert_into_claims_table(csv_data):
                             HEALTHCARECLAIMTYPEID1 = VALUES(HEALTHCARECLAIMTYPEID1), 
                             HEALTHCARECLAIMTYPEID2 = VALUES(HEALTHCARECLAIMTYPEID2)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-
-            conn.commit()  # Commit the changes to the database
-        print("Data successfully inserted into claims table.")
+        print("Data successfully inserted into procedures table.")
     except Exception as e:
-        print(f"Error inserting into claims table: {e}")
+        db.session.rollback()
+        print(f"Error inserting into procedures table: {e}")
     finally:
-        conn.close()  # Close the database connection
+        db.session.close()
 
 # Inserts care plans data from a CSV string into the `careplans` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_careplans_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -637,23 +614,21 @@ def insert_into_careplans_table(csv_data):
                             ENCOUNTER = VALUES(ENCOUNTER), CODE = VALUES(CODE), DESCRIPTION = VALUES(DESCRIPTION),
                             REASONCODE = VALUES(REASONCODE), REASONDESCRIPTION = VALUES(REASONDESCRIPTION)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-
-            conn.commit()  # Commit the changes to the database
-        print("Data successfully inserted into careplans table.")
+        print("Data successfully inserted into procedures table.")
     except Exception as e:
-        print(f"Error inserting into careplans table: {e}")
+        db.session.rollback()
+        print(f"Error inserting into procedures table: {e}")
     finally:
-        conn.close()  # Close the database connection
+        db.session.close()
 
 # Inserts allergies data from a CSV string into the `allergies` table in the database.
 # If a record already exists (based on primary key or unique constraint), it updates the existing record.
 def insert_into_allergies_table(csv_data):
-    conn = connect_to_db()
     try:
-        with conn.cursor() as cursor:
+        with db.session.begin(subtransactions=True):
             reader = csv.reader(csv_data.splitlines())
             header = next(reader)  # Skip the header row
 
@@ -672,16 +647,15 @@ def insert_into_allergies_table(csv_data):
                             DESCRIPTION1 = VALUES(DESCRIPTION1), SEVERITY1 = VALUES(SEVERITY1),
                             DESCRIPTION2 = VALUES(DESCRIPTION2), SEVERITY2 = VALUES(SEVERITY2)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
-
-            conn.commit()  # Commit the changes to the database
-        print("Data successfully inserted into allergies table.")
+        print("Data successfully inserted into procedures table.")
     except Exception as e:
-        print(f"Error inserting into allergies table: {e}")
+        db.session.rollback()
+        print(f"Error inserting into procedures table: {e}")
     finally:
-        conn.close()  # Close the database connection
+        db.session.close()
 
 # def check_claim_exists(cursor, claim_id):
 #     cursor.execute("SELECT COUNT(1) FROM claims WHERE Id = %s", (claim_id,))
