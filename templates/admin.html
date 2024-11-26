@@ -15,34 +15,25 @@
     <p>Welcome, {{ current_user.username }}! You have administrative privileges.</p>
     
     <!-- Admin Options -->
-    <div class="admin-options">
+    <!-- <div class="admin-options">
         <h2>Manage Users</h2>
         <p><a href="{{ url_for('admin.view_users') }}">View All Users</a></p>
         <p><a href="{{ url_for('admin.create_user') }}">Create New User</a></p>
         <p><a href="{{ url_for('admin.delete_user', user_id=1) }}">Delete User</a></p>
 
-
-        <!-- {% for user in users %}
-        <p><a href="{{ url_for('delete_user', user_id=user.id) }}">Delete {{ user.username }}</a></p>
-        {% endfor %} -->
-        <!-- {% for user in users %}
-        <form action="{{ url_for('delete_user', user_id=user.id) }}" method="post" style="display:inline;">
-            <button type="submit">Delete {{ user.username }}</button>
-        </form>
-        {% endfor %} -->
-    </div>
+    </div> -->
     <div class="admin-options">
          <h2>Upload FHIR Files</h2>
          <p><a href="/admin/upload_csv">Upload CSV File</a></p>
          <p><a href="/admin/upload_json">Upload JSON File</a></p>
 
     </div>
-    <div class="system-stats">
+    <!-- <div class="system-stats">
         <h2>System Statistics</h2>
         <p>Total Users: {{ total_users }}</p>
         <p>Active Users: {{ active_users }}</p>
         <p>Last Login: {{ current_user.last_login }}</p>
-    </div>
+    </div> -->
     
     <!-- Logout Option -->
     <p><a href="{{ url_for('auth.logout') }}">Logout</a></p>
