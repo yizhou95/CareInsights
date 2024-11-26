@@ -152,7 +152,7 @@ def insert_into_organizations_table(csv_data):
                             revenue = VALUES(revenue),
                             utilization = VALUES(utilization)
                     """
-                    cursor.execute(query, row)  # Pass the row as a tuple of values
+                    db.session.execute(query, row)  # Pass the row as a tuple of values
                 else:
                     print(f"Skipping row due to incorrect column count: {row}")
 
