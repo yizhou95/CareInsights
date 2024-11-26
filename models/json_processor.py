@@ -2,21 +2,13 @@ import json
 from datetime import datetime
 import pymysql
 import os
+from models import db
 
-def connect_to_db():
-    return pymysql.connect(
-        host="localhost",
-        user="root",
-        password="123456",
-        database="visualization",
-        charset="utf8mb4",
-        cursorclass=pymysql.cursors.DictCursor
-    )
 #Extracts and processes patient information from a FHIR resource
 # and inserts it into the Patients table in the database.
 #Parameters:  resource (dict): A dictionary containing the FHIR Patient resource.
 #             cursor (MySQL Cursor): The database cursor to execute SQL statements.
-def insert_patient(resource, cursor):
+def insert_patient(resource):
     # Initialize all fields to None
     patient_birthDate = None
     patient_deathDate = None
@@ -128,7 +120,7 @@ def insert_patient(resource, cursor):
 
     # SQL Insert statement to save all details in MySQL
 
-    cursor.execute("""
+    db.session.execute("""
         INSERT INTO Patients (
             id, birthDate, deathDate, SSN, Drivers, Passport, Prefix, gender, First, Last, Suffix, Maiden,
             Marital,Race, Ethnicity,Birthplace,Address,City,State,Country,Zip,LAT,LON,Healthcare_expenses,healthcare_coverage
@@ -172,7 +164,7 @@ def insert_patient(resource, cursor):
 # and inserts it into the encounter table in the database.
 #Parameters:  resource (dict): A dictionary containing the FHIR patient resource.
 #             cursor (MySQL Cursor): The database cursor to execute SQL statements.
-def insert_encounter(resource, cursor):
+def insert_encounter(resource):
     try:
         # Get the Encounter ID
         encounter_id = resource.get("id")
@@ -241,7 +233,7 @@ def insert_encounter(resource, cursor):
         # print(f"Base Encounter Cost: {base_encounter_cost}, Total Claim Cost: {total_claim_cost}, Payer Coverage: {payer_coverage}")
 
         # Insert or update the encounter data in the database
-        cursor.execute("""
+        db.session.execute("""
             INSERT INTO encounters (
                 Id, START, STOP, PATIENT, ORGANIZATION, PROVIDER,
                 ENCOUNTERCLASS, CODE, DESCRIPTION,
@@ -277,7 +269,7 @@ def insert_encounter(resource, cursor):
 # and inserts it into the condition table in the database.
 #Parameters:  resource (dict): A dictionary containing the FHIR condition resource.
 #             cursor (MySQL Cursor): The database cursor to execute SQL statements.
-def insert_condition(resource, cursor):
+def insert_condition(resource):
     try:
         # Get the Condition ID (can be used for Encounter reference)
         condition_id = resource.get("id")
@@ -326,7 +318,7 @@ def insert_condition(resource, cursor):
         # print(f"Recorded Date: {recorded_date}")
 
         # Insert or update the condition data in the database
-        cursor.execute("""
+        db.session.execute("""
             INSERT INTO conditions (
                 START, STOP, PATIENT, ENCOUNTER, CODE, DESCRIPTION
             ) VALUES (%s, %s, %s, %s, %s, %s)
@@ -351,7 +343,7 @@ def insert_condition(resource, cursor):
 # and inserts it into the claim table in the database.
 #Parameters:  resource (dict): A dictionary containing the FHIR claim resource.
 #             cursor (MySQL Cursor): The database cursor to execute SQL statements.
-def insert_claim(resource, cursor):
+def insert_claim(resource):
     try:
         # Get the Claim ID
         claim_id = resource.get("id")
@@ -401,7 +393,7 @@ def insert_claim(resource, cursor):
         # print(f"Service Date: {service_date}")
 
         # Insert or update the claim data in the database
-        cursor.execute("""
+        db.session.execute("""
             INSERT INTO claims (
                 ID, PATIENTID, PROVIDERID, PRIMARYPATIENTINSURANCEID, SECONDARYPATIENTINSURANCEID,
                 DIAGNOSIS1,DIAGNOSIS2, APPOINTMENTID, SERVICEDATE
@@ -428,10 +420,9 @@ def insert_claim(resource, cursor):
 # Parameters: fhir_data (dict): A dictionary representing the FHIR-compliant JSON data to process.
 #             Expected to have an "entry" field containing a list of resources.
 def process_fhir_resource(fhir_data):
-    conn = connect_to_db()
     try:
         # Iterate through all entries in the FHIR data.
-        with conn.cursor() as cursor:
+         with db.session.begin(subtransactions=True):
             # Extract the resource object from the entry.
             for entry in fhir_data.get("entry", []):
                 resource = entry.get("resource", {})
@@ -439,19 +430,19 @@ def process_fhir_resource(fhir_data):
                 resource_type = resource.get("resourceType")
                 # Call the corresponding method to handle the resource based on its type.
                 if resource_type == "Patient":
-                   insert_patient(resource,cursor)  # Insert Patient data.
+                   insert_patient(resource)  # Insert Patient data.
                 elif resource_type == "Encounter":
-                    insert_encounter(resource, cursor)  # Insert Encounter data.
+                    insert_encounter(resource)  # Insert Encounter data.
                 elif resource_type == "Condition":
-                    insert_condition(resource, cursor)  # Insert Condition data.
+                    insert_condition(resource)  # Insert Condition data.
                 elif resource_type == "Claim":
-                    insert_claim(resource, cursor)  # Insert Claim data.
+                    insert_claim(resource)  # Insert Claim data.
     except Exception as e:
         print(f"Error inserting into database from json: {e}")
     finally:
         # Commit the changes to the database and ensure the connection is closed.
-        conn.commit()
-        conn.close()
+        db.session.commit()
+        db.session.close() 
 
 
 
